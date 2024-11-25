@@ -6,7 +6,13 @@
 
         <form action="{{ route('tasks.store') }}" method="POST">
             @csrf
-
+            <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ old('title') }}" required>
+@error('title')
+             <div class="error">{{ $message }}</div>
+@enderror
+</div>
             <div class="form-group">
                 <label for="description">Description</label>
                 <input type="text" name="description" id="description" class="form-control" required>
@@ -15,7 +21,7 @@
             <div class="form-group">
                 <label for="due_date">Due Date</label>
                 <input type="date" name="due_date" id="due_date" class="form-control" required>
-            </div>
+            </div>
 
             <div class="form-group">
                 <label for="priority">Priority</label>
@@ -26,8 +32,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create Task</button>
-
+            <button type="submit" class="button primary">Create Task</button>
         </form>
     </div>
 @endsection

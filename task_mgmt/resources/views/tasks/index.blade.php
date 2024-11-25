@@ -14,10 +14,10 @@
                     <span>* Urgent</span>
                 @endif
 
-                <form action="{{ route('tasks.complete', $task) }}" method="POST">
+                <form action="{{ route('tasks.markComplete', $task) }}" method="POST">
                     @csrf
                     @method('PUT')
-                    <button type="submit">Complete Task</button>
+                    <button type="submit" class="button secondary">Complete Task</button>
                 </form>
             </div>
         @endforeach
