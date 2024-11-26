@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Task extends Model
 {
     use HasFactory;
-
-    // Specify the table name if it's not 'tasks' (default is plural of model name)
     protected $table = 'task_mgmt';
-
-    // Define which attributes are mass-assignable
-    protected $fillable = [
-        'description', 'due_date', 'priority', 'user_id', 'completed'
-    ];
+    protected $fillable =['user_id','title','description','due_date','priority','is_completed'];
+    
+    //A task belongs to a user
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }
