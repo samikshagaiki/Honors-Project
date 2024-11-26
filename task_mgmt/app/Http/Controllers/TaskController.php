@@ -11,42 +11,84 @@ class TaskController extends Controller
     // List all tasks
     public function index()
     {
-        $tasks = Task::where('user_id', Auth::id())
-            ->where('is_completed', false)
-            ->orderBy('priority', 'desc')
-            ->orderBy('due_date', 'asc')
-            ->get();
+        //Fetch all the tasks excluding completed tasks for the current user
+        $tasks = Task::where('user_id', auth->id())
+                     ->where('is_completed', 0)
+                     ->get();
+        $completedTasks=Task::where('user_id'.auth->id())
+                            ->where('is_completed',1)
+                            ->get();
 
-        return view('components.tasks.index', compact('tasks'));
+        return view('tasks.index', compact('tasks','completedTasks'));
     }
 
     // Show form to create a new task
     public function create()
     {
-        return view('components.tasks.create');
+        return view('tasks.create');
     }
 
     // Store a new task
     public function store(Request $request)
     {
+        //Validate input
         $request->validate([
             'title' => 'required|string|max:255', // Added title validation
             'description' => 'nullable|string|max:255',
-            'due_date' => 'required|date|after_or_equal:today',
+            'due_date' => 'required|date',
             'priority' => 'required|in:Low,Medium,High',
         ]);
 
+        //Create a new task
         Task::create([
-            'title' => $request->title, // Added title to the create array
+            'user_id'=>Auth::id(),
+            'title' => $request->title,
             'description' => $request->description,
             'due_date' => $request->due_date,
             'priority' => $request->priority,
-            'user_id' => Auth::id(),
             'is_completed' => false,
         ]);
 
         return redirect()->route('tasks.index')->with('success', 'Task created successfully!');
     }
+
+    //Edit specified task
+    public function edit(Task $task)
+    {
+        if($task->user_id !== Auth::id()){
+            return redirect()->route('tasks.index')->with('error','Unauthorized Access!!');
+        }
+
+        return view('tasks.edit',compact('task'));
+    }
+
+    //Update specified task
+    public function update(Request $request, Task $task){
+        if($task->user_id !== Auth::id()){
+            return redirect()->route('tasks.index')->with('error','Unauthorized Access!');
+        }
+        //Validate input
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'due_date' => 'required|date',
+            'priority' => 'required|in:Low,Medium,High',
+        ]);
+
+        //Check if the task is marked as completed
+        $isCompleted = $request->has('is_completed')&& $request->is_completed;
+
+        //update the task
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description, 
+            'due_date' => $request->due_date,
+            'priority' => $request->priority,
+            'is_completed' => $isCompleted ? true : $task->is_completed,
+
+        ]);
+    }
+
 
     // Mark a task as completed
     public function markComplete(Task $task)
