@@ -25,17 +25,19 @@
                 @endif
                 <p>{{ $task->description }}</p>
                 <small>Due: {{ $task->due_date }} | Priority: {{ $task->priority }}</small>
+                
+                <!-- Edit Button -->
+                <br>
+                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-primary">Edit</a>
+                </br>
 
-<!-- Edit Button -->
-<a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-primary">Edit</a>
 
-<!-- Form to mark as completed -->
-<form action="{{ route('tasks.complete', $task->id) }}" method="POST" style="display: inline;">
+                <!-- Form to mark as completed -->
+                <form action="{{ route('tasks.complete', $task->id) }}" method="POST" style="display: inline;">
                     @csrf
-                    <select name="is_completed" onchange="this.form.submit()" class="form-select form-select-sm d-inline w-auto">
-                        <option value="0" {{ !$task->is_completed ? 'selected' : '' }}>Incomplete</option>
-                        <option value="1" {{ $task->is_completed ? 'selected' : '' }}>Completed</option>
-                    </select>
+                   <label>Completed?
+                   <input type = "checkbox" onchange="this.form.submit()" name="is_completed">
+                   </label>
                 </form>
 
                 <!-- Form to delete task -->
