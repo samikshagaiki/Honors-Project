@@ -2,15 +2,20 @@
 
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Task;
+
+Auth::routes();
 
 // Home route
 Route::get('/', function () {
-    return view('home');
-})->name('home');
+    return view('welcome');
+});
 
 // Dashboard route
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $tasks = Task::where('user_id', Auth::id())->get();
+    return view('dashboard', compact('tasks'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Task Management Routes
@@ -22,14 +27,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     
+    //Task edit
+    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+
+    //task updation
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+
+
     // Mark task as complete
-    Route::put('/tasks/{task}/complete', [TaskController::class, 'markComplete'])->name('tasks.markComplete');
-    
-    // View completed tasks
-    Route::get('/tasks/completed', [TaskController::class, 'viewCompleted'])->name('tasks.viewCompleted');
+    Route::post('/tasks/{task}/complete', [TaskController::class, 'markAsCompleted'])->name('tasks.complete');
     
     // Delete a task
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+    //marking as complete
+    Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggleCompletion'])->name('tasks.toggle');
 });
 
 require __DIR__ . '/auth.php';
