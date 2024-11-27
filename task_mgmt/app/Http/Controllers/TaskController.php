@@ -31,7 +31,7 @@ class TaskController extends Controller
         //Validate input
         $request->validate([
             'title' => 'required|string|max:255', // Added title validation
-            'description' => 'nullable|string,
+            'description' => 'nullable|string',
             'due_date' => 'required|date',
             'priority' => 'required|in:Low,Medium,High',
         ]);
