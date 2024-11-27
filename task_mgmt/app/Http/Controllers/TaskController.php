@@ -15,11 +15,8 @@ class TaskController extends Controller
         $tasks = Task::where('user_id', auth->id())
                      ->where('is_completed', 0)
                      ->get();
-        $completedTasks=Task::where('user_id'.auth->id())
-                            ->where('is_completed',1)
-                            ->get();
-
-        return view('tasks.index', compact('tasks','completedTasks'));
+        
+        return view('tasks.index', compact('tasks'));
     }
 
     // Show form to create a new task
@@ -34,7 +31,7 @@ class TaskController extends Controller
         //Validate input
         $request->validate([
             'title' => 'required|string|max:255', // Added title validation
-            'description' => 'nullable|string|max:255',
+            'description' => 'nullable|string,
             'due_date' => 'required|date',
             'priority' => 'required|in:Low,Medium,High',
         ]);
@@ -91,37 +88,37 @@ class TaskController extends Controller
 
 
     // Mark a task as completed
-    public function markComplete(Task $task)
+    public function markAsComplete(Task $task)
     {
-        if ($task->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
         $task->update(['is_completed' => true]);
+        $task->save();
 
         return redirect()->route('tasks.index')->with('success', 'Task marked as completed!');
     }
-
-    // View completed tasks
-    public function viewCompleted()
-    {
-        $completedTasks = Task::where('user_id', Auth::id())
-            ->where('is_completed', true)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-
-        return view('components.tasks.completed', compact('completedTasks'));
-    }
+    
 
     // Delete a task
     public function destroy(Task $task)
     {
-        if ($task->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
         $task->delete();
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
+    }
+
+
+    public function toggleCompletion(Task $task , Request $request)
+    {
+        $request->validate(['status'=>'required|in:0,1,
+        ]);
+
+        $task->is_completed = $request->status;
+        $task->save();
+
+        $messge = $task->is_completed?'Task marked as completed!':'Task marked as incomplete!';
+
+        return response()->json(['completed'=>$task->is_completed,
+                                'message'=>$message,
+                                '$task_id'=>$task_id,
+                                ]);
     }
 }
