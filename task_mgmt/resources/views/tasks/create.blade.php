@@ -20,3 +20,16 @@
         <div class="form-group">
             <label for="due_date">Due Date</label>
             <input type="date" class="form-control" name="due_date" required>
+            </div><div class="form-group">
+            <label for="priority">Priority</label>
+            <select class="form-control" name="priority" required>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Save Task</button>
+    </form>
+</div>
+@endsection
