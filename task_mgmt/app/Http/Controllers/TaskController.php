@@ -12,7 +12,7 @@ class TaskController extends Controller
     public function index()
     {
         //Fetch all the tasks excluding completed tasks for the current user
-        $tasks = Task::where('user_id', auth->id())
+        $tasks = Task::where('user_id', auth()->id())
                      ->where('is_completed', 0)
                      ->get();
         
@@ -124,5 +124,4 @@ class TaskController extends Controller
                                 '$task_id'=>$task_id,
                                 ]);
     }
-}
 }
