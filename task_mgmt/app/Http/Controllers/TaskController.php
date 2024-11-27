@@ -109,19 +109,4 @@ class TaskController extends Controller
     }
 
 
-    public function toggleCompletion(Task $task , Request $request)
-    {
-        $request->validate(['status'=>'required|in:0,1',
-        ]);
-
-        $task->is_completed = $request->status;
-        $task->save();
-
-        $message = $task->is_completed?'Task marked as completed!':'Task marked as incomplete!';
-
-        return response()->json(['completed'=>$task->is_completed,
-                                'message'=>$message,
-                                '$task_id'=>$task_id,
-                                ]);
-    }
 }
