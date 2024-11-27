@@ -87,6 +87,9 @@ class TaskController extends Controller
             'is_completed' => $isCompleted ? true : $task->is_completed,
 
         ]);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+        
     }
 
 
