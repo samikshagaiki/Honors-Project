@@ -8,7 +8,7 @@
     <title>Task Manager</title>
 
     <!-- Pico.css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picocss@1.7.7/dist/pico.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@1.5.10/css/pico.min.css">
 </head>
     <main class="container">
        <!--Navbar -->
