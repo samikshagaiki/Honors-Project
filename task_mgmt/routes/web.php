@@ -40,8 +40,6 @@ Route::middleware('auth')->group(function () {
     // Delete a task
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    //marking as complete
-    Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggleCompletion'])->name('tasks.toggle');
 });
 
 require __DIR__ . '/auth.php';
