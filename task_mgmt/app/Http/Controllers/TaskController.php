@@ -52,7 +52,8 @@ class TaskController extends Controller
     //Edit specified task
     public function edit(Task $task)
     {
-        if($task->user_id !== Auth::id()){
+        if($task->user_id !== Auth::id())
+        {
             return redirect()->route('tasks.index')->with('error','Unauthorized Access!!');
         }
 
@@ -60,8 +61,10 @@ class TaskController extends Controller
     }
 
     //Update specified task
-    public function update(Request $request, Task $task){
-        if($task->user_id !== Auth::id()){
+    public function update(Request $request, Task $task)
+    {
+        if($task->user_id !== Auth::id())
+        {
             return redirect()->route('tasks.index')->with('error','Unauthorized Access!');
         }
         //Validate input
@@ -108,17 +111,18 @@ class TaskController extends Controller
 
     public function toggleCompletion(Task $task , Request $request)
     {
-        $request->validate(['status'=>'required|in:0,1,
+        $request->validate(['status'=>'required|in:0,1',
         ]);
 
         $task->is_completed = $request->status;
         $task->save();
 
-        $messge = $task->is_completed?'Task marked as completed!':'Task marked as incomplete!';
+        $message = $task->is_completed?'Task marked as completed!':'Task marked as incomplete!';
 
         return response()->json(['completed'=>$task->is_completed,
                                 'message'=>$message,
                                 '$task_id'=>$task_id,
                                 ]);
     }
+}
 }
