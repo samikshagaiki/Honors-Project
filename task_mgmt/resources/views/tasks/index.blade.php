@@ -18,13 +18,16 @@
                 // Highlight if task is high priority, not completed, and due today
                 $isHighlighted = ($task->priority === 'High' && !$task->is_completed && $task->due_date === now()->toDateString());
             @endphp
-            <li class="list-group-item {{ $isHighlighted ? 'bg-warning' : '' }}">
+            <li class="list-group-item" style="{{ $isHighlighted ? 'background-color: #fff910' : '' }}">
                 <strong>{{ $task->title }}</strong>
                 @if ($isHighlighted)
                     <span class="text-danger">*</span>
                 @endif
                 <p>{{ $task->description }}</p>
                 <small>Due: {{ $task->due_date }} | Priority: {{ $task->priority }}</small>
+
+<!-- Edit Button -->
+<a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-primary">Edit</a>
 
 <!-- Form to mark as completed -->
 <form action="{{ route('tasks.complete', $task->id) }}" method="POST" style="display: inline;">
